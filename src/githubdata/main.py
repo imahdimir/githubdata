@@ -67,7 +67,6 @@ class GithubData :
   def commit_and_push_to_github_data_target(self , message , branch = 'main') :
     targ_url_wt_usr_tok = self._prepare_target_url()
     tu = targ_url_wt_usr_tok
-    print(tu)
 
     self._stage_evthing_in_repo()
 
