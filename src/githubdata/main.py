@@ -6,6 +6,10 @@ from pathlib import PurePath
 
 from dulwich import porcelain
 from dulwich.repo import Repo
+from dulwich.ignore import read_ignore_patterns
+from dulwich.ignore import match_pattern
+from dulwich.ignore import IgnoreFilterManager
+from dulwich.ignore import IgnoreFilter
 
 
 class GithubData :
@@ -21,15 +25,30 @@ class GithubData :
 
   def _list_evthing_in_repo_dir(self) :
     evt = list(self.dir.glob('*'))
-    # evt = [x for x in evt if x.stem != '.git']
     evt = [PurePath(x).relative_to(self.dir) for x in evt]
 
     return evt
 
+  def _remove_ignored_files(self , file_paths) :
+    ignore_fp = self.dir / '.gitignore'
+
+    if not ignore_fp.exists() :
+      return file_paths
+
+    with open(ignore_fp , 'rb') as fi :
+      ptrns = list(read_ignore_patterns(fi))
+
+    flt = IgnoreFilter(ptrns)
+
+    out = [x for x in file_paths if not flt.is_ignored(x)]
+
+    return out
+
   def _stage_evthing_in_repo(self) :
     evt = self._list_evthing_in_repo_dir()
-    evt = [str(x) for x in evt]
-    self.repo.stage(evt)
+    not_ignored = self._remove_ignored_files(evt)
+    stg = [str(x) for x in not_ignored]
+    self.repo.stage(stg)
 
   def _get_username_token_from_input(self) :
     usr = input('(skip for default) github username:')
@@ -103,3 +122,9 @@ def build_targurl_with_usr_token(usr , tok , targ_repo) :
 # btics = GithubData(gsrc)
 # btics.clone_overwrite_last_version()
 # print(btics.data_fp)
+# ##
+# btics.commit_and_push_to_github_data_target('test')
+
+
+##
+##
