@@ -25,6 +25,7 @@ class GithubData :
 
   def _list_evthing_in_repo_dir(self) :
     evt = list(self.dir.glob('*'))
+    evt = [x for x in evt if x.stem != '.DS_Store']
     evt = [PurePath(x).relative_to(self.dir) for x in evt]
 
     return evt
