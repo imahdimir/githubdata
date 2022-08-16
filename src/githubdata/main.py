@@ -20,12 +20,11 @@ class GithubData :
 
     self.dir = Path('github_' + self.usrname_repname.replace('/' , '_'))
 
-    self.data_fp = None
+    self.data_fps = None
     self.repo = None
 
   def _list_evthing_in_repo_dir(self) :
     evt = list(self.dir.glob('*'))
-    evt = [x for x in evt if x.stem != '.DS_Store']
     evt = [PurePath(x).relative_to(self.dir) for x in evt]
 
     return evt
@@ -67,10 +66,11 @@ class GithubData :
                                         usr_tok[1] ,
                                         self.usrname_repname)
 
-  def _set_data_fp(self) :
+  def set_data_fps(self) :
     evt = self._list_evthing_in_repo_dir()
-    out = [x for x in evt if x.suffix == '.prq']
-    self.data_fp = self.dir / out[0]
+    evt = [x for x in evt if x.suffix == '.prq']
+    evt = [self.dir / x for x in evt]
+    self.data_fps = sorted(evt)
 
   def rmdir(self) :
     shutil.rmtree(self.dir)
@@ -82,7 +82,7 @@ class GithubData :
     porcelain.clone(self.source_url , self.dir , depth = 1)
 
     self.repo = Repo(str(self.dir))
-    self._set_data_fp()
+    self.set_data_fps()
 
   def commit_and_push_to_github_data_target(self , message , branch = 'main') :
     targ_url_wt_usr_tok = self._prepare_target_url()
@@ -122,7 +122,10 @@ def build_targurl_with_usr_token(usr , tok , targ_repo) :
 # gsrc = 'https://github.com/imahdimir/d-Unique-BaseTickers-TSETMC'
 # btics = GithubData(gsrc)
 # btics.clone_overwrite_last_version()
-# print(btics.data_fp)
+# print(btics.data_fps)
+# ##
+# btics.set_data_fps()
+# btics.data_fps
 # ##
 # btics.commit_and_push_to_github_data_target('test')
 
