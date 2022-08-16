@@ -5,11 +5,9 @@ from pathlib import Path
 from pathlib import PurePath
 
 from dulwich import porcelain
-from dulwich.repo import Repo
-from dulwich.ignore import read_ignore_patterns
-from dulwich.ignore import match_pattern
-from dulwich.ignore import IgnoreFilterManager
 from dulwich.ignore import IgnoreFilter
+from dulwich.ignore import read_ignore_patterns
+from dulwich.repo import Repo
 
 
 class GithubData :
@@ -18,19 +16,36 @@ class GithubData :
     self.source_url = build_proper_github_repo_url(source_url)
     self.usrname_repname = get_usr_reponame_url(source_url)
 
-    self.dir = Path('github_' + self.usrname_repname.replace('/' , '_'))
+    self._local_path = Path('github_' + self.usrname_repname.replace('/' , '_'))
 
     self.data_fps = None
     self.repo = None
 
-  def _list_evthing_in_repo_dir(self) :
-    evt = list(self.dir.glob('*'))
-    evt = [PurePath(x).relative_to(self.dir) for x in evt]
+  @property
+  def local_path(self) :
+    return self._local_path
 
+  @local_path.setter
+  def local_path(self , local_containing_dir) :
+    if Path(local_containing_dir).exists() :
+      repo_base_name = self.usrname_repname.split('/')[1]
+      self._local_path = Path(local_containing_dir) / repo_base_name
+
+      if not self._local_path.exists() :
+        self._local_path.mkdir()
+      else :
+        print(f"The path {self._local_path} already exist.")
+
+    else :
+      print("Please enter a valid local path")
+
+  def _list_evthing_in_repo_dir(self) :
+    evt = list(self._local_path.glob('*'))
+    evt = [PurePath(x).relative_to(self._local_path) for x in evt]
     return evt
 
   def _remove_ignored_files(self , file_paths) :
-    ignore_fp = self.dir / '.gitignore'
+    ignore_fp = self._local_path / '.gitignore'
 
     if not ignore_fp.exists() :
       return file_paths
@@ -40,9 +55,7 @@ class GithubData :
 
     flt = IgnoreFilter(ptrns)
 
-    out = [x for x in file_paths if not flt.is_ignored(x)]
-
-    return out
+    return [x for x in file_paths if not flt.is_ignored(x)]
 
   def _stage_evthing_in_repo(self) :
     evt = self._list_evthing_in_repo_dir()
@@ -69,19 +82,25 @@ class GithubData :
   def set_data_fps(self) :
     evt = self._list_evthing_in_repo_dir()
     evt = [x for x in evt if x.suffix == '.prq']
-    evt = [self.dir / x for x in evt]
+    evt = [self._local_path / x for x in evt]
     self.data_fps = sorted(evt)
 
   def rmdir(self) :
-    shutil.rmtree(self.dir)
+    shutil.rmtree(self._local_path)
 
-  def clone_overwrite_last_version(self) :
-    if self.dir.exists() :
+  def clone_overwrite_last_version(self , depth = 1) :
+    """
+
+    :param depth: None for full depth, default = 1 (last version)
+    :return: None
+    """
+
+    if self._local_path.exists() :
       self.rmdir()
 
-    porcelain.clone(self.source_url , self.dir , depth = 1)
+    porcelain.clone(self.source_url , self._local_path , depth = depth)
 
-    self.repo = Repo(str(self.dir))
+    self.repo = Repo(str(self._local_path))
     self.set_data_fps()
 
   def commit_and_push_to_github_data_target(self , message , branch = 'main') :
@@ -92,7 +111,7 @@ class GithubData :
 
     self.repo.do_commit(message.encode())
 
-    porcelain.push(str(self.dir) , tu , branch)
+    porcelain.push(str(self.local_path) , tu , branch)
 
 def build_proper_github_repo_url(github_repo_url) :
   inp = github_repo_url
@@ -121,14 +140,12 @@ def build_targurl_with_usr_token(usr , tok , targ_repo) :
 ##
 # gsrc = 'https://github.com/imahdimir/d-Unique-BaseTickers-TSETMC'
 # btics = GithubData(gsrc)
+# btics.local_path = '/Users/mahdi/Dropbox'
+# ##
 # btics.clone_overwrite_last_version()
 # print(btics.data_fps)
 # ##
-# btics.set_data_fps()
-# btics.data_fps
-# ##
-# btics.commit_and_push_to_github_data_target('test')
+# btics.rmdir()
 
 
-##
 ##
