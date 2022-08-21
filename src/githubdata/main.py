@@ -1,5 +1,3 @@
-##
-
 import shutil
 from pathlib import Path
 from pathlib import PurePath
@@ -86,6 +84,8 @@ class GithubDataRepo :
 
   def clone_overwrite_last_version(self , depth = 1) :
     """
+    Every time excecuted, it re-downloads last version of the reposiroty to local_path.
+
     :param depth: None for full depth, default = 1 (last version)
     :return: None
     """
@@ -131,14 +131,3 @@ def build_proper_github_repo_url(github_repo_url) :
 
 def build_targurl_with_usr_token(usr , tok , targ_repo) :
   return f'https://{usr}:{tok}@github.com/{targ_repo}'
-
-##
-# gsrc = 'https://github.com/imahdimir/d-uniq-BaseTickers'
-# btics = GithubDataRepo(gsrc)
-# ##
-# btics.clone_overwrite_last_version()
-# ##
-# fps = btics.return_sorted_list_of_fpns_with_the_suffix('prq')
-# print(fps)
-#
-# ##
