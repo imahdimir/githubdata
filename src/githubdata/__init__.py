@@ -1,1 +1,1 @@
-from .main import GithubData
+from .main import GithubDataRepo
