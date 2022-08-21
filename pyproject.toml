@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "githubdata"
 version = "2.1"
 authors = [{ name = "Mahdi Mir", email = "imahdimir@gmail.com" }]
-description = "A simple tool to get last/full version of a github repository and committing back"
+description = "A simple tool to get last/full version of a github repository and committing back to it"
 readme = "README.md"
 license = { file = "LICENSE" }
 dependencies = [
