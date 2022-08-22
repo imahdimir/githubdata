@@ -5,22 +5,25 @@ it.
 # Quick Start
 
 ```python
-from githubdata import GithubDataRepo
+>>> from githubdata import GithubDataRepo
 
 
-url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
+>>> url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
 
-repo = GithubDataRepo(url)
-repo.clone_overwrite_last_version()
+>>> repo = GithubDataRepo(url)
+>>> repo.clone_overwrite_last_version()
 
-data_suffix = '.xlsx'
-fpns = repo.return_sorted_list_of_fpns_with_the_suffix(data_suffix)
+>>> data_suffix = '.xlsx'
+>>> fpns = repo.return_sorted_list_of_fpns_with_the_suffix(data_suffix)
+
+>>> print(fpns)
+[PosixPath('d-uniq-BaseTickers/data.xlsx')]
 ```
 
 ## To delete the directory downloaded
 
 ```python
-repo.rmdir()
+>>> repo.rmdir()
 ```
 
 # More Details
