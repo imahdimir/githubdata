@@ -14,10 +14,10 @@ pip install githubdata
 
 >>> url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
 
->>> repo = GithubData(url) 
->>> repo.clone()
+>>> rp = GithubData(url) 
+>>> rp.clone()
 
->>> fp = repo.data_filepath
+>>> fp = rp.data_filepath
 >>> print(fp)
 'd-uniq-BaseTickers/data.xlsx'  # This the relative path of downloaded dataset
 ```
@@ -32,15 +32,15 @@ df = pd.read_excel(fp)
 ## To delete everything downloaded
 
 ```python
-repo.rmdir()
+rp.rmdir()
 ```
 
 # More Details
 
-`repo.clone()`
+`rp.clone()`
 
 - Every time excecuted, it re-downloads last version of data.
 
-`repo.data_filepath`
+`rp.data_filepath`
 
 - This attribute contains the relative path of the downloaded dataset.
