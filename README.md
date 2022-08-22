@@ -44,3 +44,6 @@ rp.rmdir()
 `rp.data_filepath`
 
 - This attribute contains the relative path of the downloaded dataset.
+
+# Contributions
+The project is open to any contribution.
