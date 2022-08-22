@@ -17,7 +17,7 @@ data_suffix = '.xlsx'
 fpns = repo.return_sorted_list_of_fpns_with_the_suffix(data_suffix)
 ```
 
-## To delete the directory downloaded:
+## To delete the directory downloaded
 
 ```python
 repo.rmdir()
