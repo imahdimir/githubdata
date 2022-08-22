@@ -2,6 +2,10 @@ A simple tool to get last/full version of a github repository and committing
 back to
 it.
 
+# Install
+```bash
+pip install githubdata
+```
 # Quick Start
 
 ```python
@@ -18,10 +22,17 @@ it.
 'd-uniq-BaseTickers/data.xlsx'  # This the relative path of downloaded dataset
 ```
 
+You can easily use the `fp` to read the dataset quickly. like:
+```python
+import pandas as pd
+
+df = pd.read_excel(fp)
+```
+
 ## To delete everything downloaded
 
 ```python
->>> repo.rmdir()
+repo.rmdir()
 ```
 
 # More Details
