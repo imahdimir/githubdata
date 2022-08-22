@@ -1,6 +1,7 @@
 import shutil
 from pathlib import Path
 from pathlib import PurePath
+import json
 
 from dulwich import porcelain
 from dulwich.ignore import IgnoreFilter
@@ -10,7 +11,7 @@ from dulwich.repo import Repo
 
 gitburl = 'https://github.com/'
 
-class GithubDataRepo :
+class GithubData :
 
   def __init__(self , source_url) :
     self.src_url = build_proper_github_repo_url(source_url)
@@ -19,6 +20,9 @@ class GithubDataRepo :
 
     self._local_path = None
     self._repo = None
+    self.meta = None
+    self.data_suf = None
+    self.data_filepath = None
 
     self._init_local_path()
 
@@ -82,7 +86,28 @@ class GithubDataRepo :
                                         usr_tok[1] ,
                                         self.usr_repo_name)
 
-  def clone_overwrite_last_version(self , depth = 1) :
+  def _set_defualt_data_suffix(self) :
+    self.meta = self.read_json()
+    self.data_suf = self.meta['suf']
+
+  def _set_data_fpns(self) :
+    self._set_defualt_data_suffix()
+    fpns = self.return_sorted_list_of_fpns_with_the_suffix(self.data_suf)
+    if len(fpns) == 1 :
+      self.data_filepath = fpns[0]
+    else :
+      self.data_filepath = fpns
+
+  def read_json(self) :
+    fps = self.return_sorted_list_of_fpns_with_the_suffix('.json')
+    fp = fps[0]
+
+    with open(fp , 'r') as fi :
+      js = json.load(fi)
+
+    return js
+
+  def clone(self , depth = 1) :
     """
     Every time excecuted, it re-downloads last version of the reposiroty to local_path.
 
@@ -96,12 +121,14 @@ class GithubDataRepo :
 
     self._repo = Repo(str(self._local_path))
 
-  def return_sorted_list_of_fpns_with_the_suffix(self , suffix = '.prq') :
+    self._set_data_fpns()
+
+  def return_sorted_list_of_fpns_with_the_suffix(self , suffix) :
     suffix = '.' + suffix if suffix[0] != '.' else suffix
     the_list = list(self._local_path.glob(f'*{suffix}'))
     return sorted(the_list)
 
-  def commit_and_push_to_github_data_target(self , message , branch = 'main') :
+  def commit_push(self , message , branch = 'main') :
     targ_url_wt_usr_tok = self._prepare_target_url()
     tu = targ_url_wt_usr_tok
 
@@ -131,3 +158,5 @@ def build_proper_github_repo_url(github_repo_url) :
 
 def build_targurl_with_usr_token(usr , tok , targ_repo) :
   return f'https://{usr}:{tok}@github.com/{targ_repo}'
+
+##

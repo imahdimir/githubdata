@@ -5,22 +5,20 @@ it.
 # Quick Start
 
 ```python
->>> from githubdata import GithubDataRepo
+>>> from githubdata import GithubData
 
 
 >>> url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
 
->>> repo = GithubDataRepo(url)
->>> repo.clone_overwrite_last_version()
+>>> repo = GithubData(url) 
+>>> repo.clone()
 
->>> data_suffix = '.xlsx'
->>> fpns = repo.return_sorted_list_of_fpns_with_the_suffix(data_suffix)
-
->>> print(fpns)
-[PosixPath('d-uniq-BaseTickers/data.xlsx')]
+>>> fp = repo.data_filepath
+>>> print(fp)
+'d-uniq-BaseTickers/data.xlsx'  # This the relative path of downloaded dataset
 ```
 
-## To delete the directory downloaded
+## To delete everything downloaded
 
 ```python
 >>> repo.rmdir()
@@ -28,10 +26,10 @@ it.
 
 # More Details
 
-`repo.clone_overwrite_last_version()`
+`repo.clone()`
 
 - Every time excecuted, it re-downloads last version of data.
 
-`repo.return_sorted_list_of_fpns_with_the_suffix('.xlsx')`
+`repo.data_filepath`
 
-- Returns a sorted list containing filepaths downloaded with a given suffix (type).
+- This attribute contains the relative path of the downloaded dataset.
