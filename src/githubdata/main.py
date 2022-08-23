@@ -173,13 +173,13 @@ def build_targurl_with_usr_token(usr , tok , targ_repo) :
 
 ##
 
-url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
-
-repo = GithubData(url)
-repo.clone()
-
-fp = repo.data_filepath
-print(fp)
+# url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
+#
+# repo = GithubData(url)
+# repo.clone()
+#
+# fp = repo.data_filepath
+# print(fp)
 
 ##
 
