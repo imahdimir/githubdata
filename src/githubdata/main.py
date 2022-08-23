@@ -9,6 +9,11 @@ from dulwich.ignore import read_ignore_patterns
 from dulwich.repo import Repo
 
 
+support_data_file_suffixes = {
+    '.xlsx' : None ,
+    '.prq'  : None ,
+    }
+
 gitburl = 'https://github.com/'
 
 class GithubData :
@@ -87,8 +92,11 @@ class GithubData :
                                         self.usr_repo_name)
 
   def _set_defualt_data_suffix(self) :
-    self.meta = self.read_json()
-    self.data_suf = self.meta['suf']
+    for ky in support_data_file_suffixes.keys() :
+      fps = self.return_sorted_list_of_fpns_with_the_suffix(ky)
+      if len(fps) > 1 :
+        self.data_suf = ky
+        break
 
   def _set_data_fpns(self) :
     self._set_defualt_data_suffix()
@@ -98,12 +106,19 @@ class GithubData :
     else :
       self.data_filepath = fpns
 
+  def return_sorted_list_of_fpns_with_the_suffix(self , suffix) :
+    suffix = '.' + suffix if suffix[0] != '.' else suffix
+    the_list = list(self._local_path.glob(f'*{suffix}'))
+    return sorted(the_list)
+
   def read_json(self) :
     fps = self.return_sorted_list_of_fpns_with_the_suffix('.json')
     fp = fps[0]
 
     with open(fp , 'r') as fi :
       js = json.load(fi)
+
+    self.meta = js
 
     return js
 
@@ -123,10 +138,7 @@ class GithubData :
 
     self._set_data_fpns()
 
-  def return_sorted_list_of_fpns_with_the_suffix(self , suffix) :
-    suffix = '.' + suffix if suffix[0] != '.' else suffix
-    the_list = list(self._local_path.glob(f'*{suffix}'))
-    return sorted(the_list)
+    self.read_json()
 
   def commit_push(self , message , branch = 'main') :
     targ_url_wt_usr_tok = self._prepare_target_url()
