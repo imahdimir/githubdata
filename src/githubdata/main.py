@@ -94,7 +94,7 @@ class GithubData :
   def _set_defualt_data_suffix(self) :
     for ky in support_data_file_suffixes.keys() :
       fps = self.return_sorted_list_of_fpns_with_the_suffix(ky)
-      if len(fps) > 1 :
+      if len(fps) >= 1 :
         self.data_suf = ky
         break
 
@@ -173,14 +173,14 @@ def build_targurl_with_usr_token(usr , tok , targ_repo) :
 
 ##
 
-# url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
-#
-# repo = GithubData(url)
-# repo.clone()
-#
-# fp = repo.data_filepath
-# print(fp)
-#
-# ##
+url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
+
+repo = GithubData(url)
+repo.clone()
+
+fp = repo.data_filepath
+print(fp)
+
+##
 
 ##
