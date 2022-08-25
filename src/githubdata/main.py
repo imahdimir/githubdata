@@ -100,6 +100,10 @@ class GithubData :
 
   def _set_data_fpns(self) :
     self._set_defualt_data_suffix()
+
+    if self.data_suf is None:
+      return None
+
     fpns = self.return_sorted_list_of_fpns_with_the_suffix(self.data_suf)
     if len(fpns) == 1 :
       self.data_filepath = fpns[0]
@@ -113,6 +117,9 @@ class GithubData :
 
   def read_json(self) :
     fps = self.return_sorted_list_of_fpns_with_the_suffix('.json')
+    if len(fps) == 0 :
+      return None
+
     fp = fps[0]
 
     with open(fp , 'r') as fi :
