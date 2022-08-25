@@ -25,9 +25,10 @@ class GithubData :
 
     self._local_path = None
     self._repo = None
-    self.meta = None
     self.data_suf = None
     self.data_filepath = None
+    self.meta = None
+    self.meta_filepath = None
 
     self._init_local_path()
 
@@ -121,6 +122,7 @@ class GithubData :
       return None
 
     fp = fps[0]
+    self.meta_filepath = fp
 
     with open(fp , 'r') as fi :
       js = json.load(fi)
