@@ -62,7 +62,7 @@ class GithubData :
       self._local_path.mkdir()
     else :
       print(f'{bcolors.WARNING}WARNING: the dir {self.repo_name} already exist.\n'
-            f'Make sure you want to overwrite it; or try setting `.local_path` to another directory.')
+            f'Make sure you want overwriting; or set `.local_path` to another directory before `.clone()`')
 
   def _init_local_path(self) :
     self.local_path = None
