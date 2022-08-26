@@ -1,3 +1,6 @@
+##
+
+
 import shutil
 from pathlib import Path
 from pathlib import PurePath
@@ -16,6 +19,17 @@ support_data_file_suffixes = {
 
 gitburl = 'https://github.com/'
 
+class bcolors :
+  HEADER = '\033[95m'
+  OKBLUE = '\033[94m'
+  OKCYAN = '\033[96m'
+  OKGREEN = '\033[92m'
+  WARNING = '\033[93m'
+  FAIL = '\033[91m'
+  ENDC = '\033[0m'
+  BOLD = '\033[1m'
+  UNDERLINE = '\033[4m'
+
 class GithubData :
 
   def __init__(self , source_url) :
@@ -31,6 +45,7 @@ class GithubData :
     self.meta_filepath = None
 
     self._init_local_path()
+    self._set_data_fpns()
 
   @property
   def local_path(self) :
@@ -46,8 +61,8 @@ class GithubData :
     if not self._local_path.exists() :
       self._local_path.mkdir()
     else :
-      print(f'WARNING: the dir {self.repo_name} already exist.\n'
-            f'If it is not the same repository try setting local_path attribute to a differen dir.')
+      print(f'{bcolors.WARNING}WARNING: the dir {self.repo_name} already exist.\n'
+            f'Make sure you want to overwrite it; or try setting `.local_path` to another directory.')
 
   def _init_local_path(self) :
     self.local_path = None
@@ -102,7 +117,7 @@ class GithubData :
   def _set_data_fpns(self) :
     self._set_defualt_data_suffix()
 
-    if self.data_suf is None:
+    if self.data_suf is None :
       return None
 
     fpns = self.return_sorted_list_of_fpns_with_the_suffix(self.data_suf)
@@ -190,6 +205,5 @@ def build_targurl_with_usr_token(usr , tok , targ_repo) :
 # fp = repo.data_filepath
 # print(fp)
 
-##
 
 ##

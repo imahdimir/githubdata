@@ -19,6 +19,7 @@ pip install githubdata
 
 >>> fp = rp.data_filepath
 >>> print(fp)
+
 'd-uniq-BaseTickers/data.xlsx'  # This the relative path of downloaded dataset
 ```
 
