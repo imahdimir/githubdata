@@ -3,9 +3,11 @@ back to
 it.
 
 # Install
+
 ```bash
 pip install githubdata
 ```
+
 # Quick Start
 
 ```python
@@ -24,6 +26,7 @@ pip install githubdata
 ```
 
 You can easily use the `fp` to read the dataset quickly. like:
+
 ```python
 import pandas as pd
 
@@ -47,4 +50,5 @@ rp.rmdir()
 - This attribute contains the relative path of the downloaded dataset.
 
 # Contributions
+
 The project is open to any contribution.

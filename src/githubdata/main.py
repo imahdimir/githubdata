@@ -1,10 +1,10 @@
 ##
 
 
+import json
 import shutil
 from pathlib import Path
 from pathlib import PurePath
-import json
 
 from dulwich import porcelain
 from dulwich.ignore import IgnoreFilter
@@ -19,22 +19,14 @@ support_data_file_suffixes = {
 
 gitburl = 'https://github.com/'
 
-class bcolors :
-  HEADER = '\033[95m'
-  OKBLUE = '\033[94m'
-  OKCYAN = '\033[96m'
-  OKGREEN = '\033[92m'
-  WARNING = '\033[93m'
-  FAIL = '\033[91m'
-  ENDC = '\033[0m'
-  BOLD = '\033[1m'
-  UNDERLINE = '\033[4m'
-
 class GithubData :
 
   def __init__(self , source_url) :
     self.src_url = build_proper_github_repo_url(source_url)
+
     self.usr_repo_name = self.src_url.split(gitburl)[1]
+
+    self.usr = self.usr_repo_name.split('/')[0]
     self.repo_name = self.usr_repo_name.split('/')[1]
 
     self._local_path = None
@@ -61,8 +53,9 @@ class GithubData :
     if not self._local_path.exists() :
       self._local_path.mkdir()
     else :
-      print(f'{bcolors.WARNING}WARNING: the dir {self.repo_name} already exist.\n'
-            f'Make sure you want overwriting; or set `.local_path` to another directory before `.clone()`')
+      print(f'WARNING: the dir {self.repo_name} already exist.\n'
+            f'If you do NOT want overwriting'
+            f': set `.local_path` to another directory before `.clone()`')
 
   def _init_local_path(self) :
     self.local_path = None
@@ -196,14 +189,6 @@ def build_targurl_with_usr_token(usr , tok , targ_repo) :
   return f'https://{usr}:{tok}@github.com/{targ_repo}'
 
 ##
-
-# url = 'https://github.com/imahdimir/d-uniq-BaseTickers'
-#
-# repo = GithubData(url)
-# repo.clone()
-#
-# fp = repo.data_filepath
-# print(fp)
 
 
 ##
