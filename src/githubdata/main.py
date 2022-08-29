@@ -205,19 +205,19 @@ def _github_url_wt_credentials(user , token , targ_repo) :
   return f'https://{user}:{token}@github.com/{targ_repo}'
 
 ##
-u = 'https://github.com/imahdimir/d-BaseTicker'
-r = GithubData(u)
-r.clone()
-
-##
-u = 'https://github.com/imahdimir/tset'
-r = GithubData(u , token = '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')
-r.clone()
-
-##
-r.commit_and_push('test' ,
-                  user = r.user_name ,
-                  token = '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')
+# u = 'https://github.com/imahdimir/d-BaseTicker'
+# r = GithubData(u)
+# r.clone()
+#
+# ##
+# u = 'https://github.com/imahdimir/tset'
+# r = GithubData(u , token = '')
+# r.clone()
+#
+# ##
+# r.commit_and_push('test' ,
+#                   user = r.user_name ,
+#                   token = '')
 
 ##
 
