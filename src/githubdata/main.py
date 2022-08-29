@@ -9,10 +9,9 @@ from pathlib import PurePath
 from dulwich import porcelain
 from dulwich.ignore import IgnoreFilter
 from dulwich.ignore import read_ignore_patterns
-from dulwich.repo import Repo
 
 
-support_data_file_suffixes = {
+data_file_suffixes = {
     '.xlsx' : None ,
     '.prq'  : None ,
     }
@@ -20,24 +19,40 @@ support_data_file_suffixes = {
 gitburl = 'https://github.com/'
 
 class GithubData :
+  def __init__(self , source_url , user = None , token = None) :
+    self.source_url = source_url
+    self._cred_user = user
+    self._token = token
 
-  def __init__(self , source_url) :
-    self.src_url = build_proper_github_repo_url(source_url)
+    self.clean_source_url = _clean_github_url(source_url)
+    self.user_repo = self.clean_source_url.split(gitburl)[1]
+    self.user_name = self.user_repo.split('/')[0]
+    self.repo_name = self.user_repo.split('/')[1]
 
-    self.usr_repo_name = self.src_url.split(gitburl)[1]
-
-    self.usr = self.usr_repo_name.split('/')[0]
-    self.repo_name = self.usr_repo_name.split('/')[1]
-
+    self._cred_url = None
     self._local_path = None
-    self._repo = None
-    self.data_suf = None
-    self.data_filepath = None
-    self.meta = None
-    self.meta_filepath = None
 
+    self._repo = None
+    self._data_suf = None
+    self.data_fp = None
+    self.meta = None
+    self.meta_fp = None
+
+    self._make_url_with_credentials()
     self._init_local_path()
     self._set_data_fpns()
+
+  def _make_url_with_credentials(self) :
+    if self._token is None :
+      self._cred_url = self.clean_source_url
+      return None
+
+    if self._cred_user is None :
+      self._cred_user = self.user_name
+
+    self._cred_url = _github_url_wt_credentials(user = self._cred_user ,
+                                                token = self._token ,
+                                                targ_repo = self.user_repo)
 
   @property
   def local_path(self) :
@@ -54,16 +69,21 @@ class GithubData :
       self._local_path.mkdir()
     else :
       print(f'WARNING: the dir {self.repo_name} already exist.\n'
-            f'If you do NOT want overwriting'
+            f'If you DO NOT want overwriting'
             f': set `.local_path` to another directory before `.clone()`')
 
   def _init_local_path(self) :
     self.local_path = None
 
-  def _list_evthing_in_repo_dir(self) :
+  def _get_user_fr_input(self) :
+    usr = input('(skip for default) github username:')
+    if usr.strip() == '' :
+      usr = self.user_name
+    return usr
+
+  def _list_ev_thing_in_repo_dir(self) :
     evt = list(self._local_path.glob('*'))
-    evt = [PurePath(x).relative_to(self._local_path) for x in evt]
-    return evt
+    return [PurePath(x).relative_to(self._local_path) for x in evt]
 
   def _remove_ignored_files(self , file_paths) :
     ignore_fp = self._local_path / '.gitignore'
@@ -79,58 +99,56 @@ class GithubData :
     return [x for x in file_paths if not flt.is_ignored(x)]
 
   def _stage_evthing_in_repo(self) :
-    evt = self._list_evthing_in_repo_dir()
+    evt = self._list_ev_thing_in_repo_dir()
     not_ignored = self._remove_ignored_files(evt)
     stg = [str(x) for x in not_ignored]
     self._repo.stage(stg)
 
-  def _get_username_token_from_input(self) :
-    usr = input('(skip for default) github username:')
+  def _ret_commit_credit_url(self , user = None , token = None) :
+    if user is None :
+      user = self._get_user_fr_input()
+    else :
+      user = user
 
-    if usr.strip() == "" :
-      usr = self.usr_repo_name.split('/')[0]
+    if token is None :
+      tok = input('_token:')
+    else :
+      tok = token
 
-    tok = input('token:')
-
-    return usr , tok
-
-  def _prepare_target_url(self) :
-    usr_tok = self._get_username_token_from_input()
-    return build_targurl_with_usr_token(usr_tok[0] ,
-                                        usr_tok[1] ,
-                                        self.usr_repo_name)
+    return _github_url_wt_credentials(user , tok , self.user_repo)
 
   def _set_defualt_data_suffix(self) :
-    for ky in support_data_file_suffixes.keys() :
-      fps = self.return_sorted_list_of_fpns_with_the_suffix(ky)
+    for ky in data_file_suffixes.keys() :
+      fps = self.ret_sorted_fpns_by_suf(ky)
       if len(fps) >= 1 :
-        self.data_suf = ky
+        self._data_suf = ky
         break
 
   def _set_data_fpns(self) :
     self._set_defualt_data_suffix()
 
-    if self.data_suf is None :
+    if self._data_suf is None :
       return None
 
-    fpns = self.return_sorted_list_of_fpns_with_the_suffix(self.data_suf)
-    if len(fpns) == 1 :
-      self.data_filepath = fpns[0]
-    else :
-      self.data_filepath = fpns
+    fpns = self.ret_sorted_fpns_by_suf(self._data_suf)
 
-  def return_sorted_list_of_fpns_with_the_suffix(self , suffix) :
+    if len(fpns) == 1 :
+      self.data_fp = fpns[0]
+    else :
+      self.data_fp = fpns
+
+  def ret_sorted_fpns_by_suf(self , suffix) :
     suffix = '.' + suffix if suffix[0] != '.' else suffix
     the_list = list(self._local_path.glob(f'*{suffix}'))
     return sorted(the_list)
 
   def read_json(self) :
-    fps = self.return_sorted_list_of_fpns_with_the_suffix('.json')
+    fps = self.ret_sorted_fpns_by_suf('.json')
     if len(fps) == 0 :
       return None
 
     fp = fps[0]
-    self.meta_filepath = fp
+    self.meta_fp = fp
 
     with open(fp , 'r') as fi :
       js = json.load(fi)
@@ -148,29 +166,27 @@ class GithubData :
     """
     if self._local_path.exists() :
       self.rmdir()
-
-    porcelain.clone(self.src_url , self._local_path , depth = depth)
-
-    self._repo = Repo(str(self._local_path))
-
+    self._repo = porcelain.clone(self._cred_url ,
+                                 self._local_path ,
+                                 depth = depth)
     self._set_data_fpns()
-
     self.read_json()
 
-  def commit_push(self , message , branch = 'main') :
-    targ_url_wt_usr_tok = self._prepare_target_url()
-    tu = targ_url_wt_usr_tok
-
+  def commit_and_push(self ,
+                      message ,
+                      branch = 'main' ,
+                      user = None ,
+                      token = None
+                      ) :
+    cred_url = self._ret_commit_credit_url(user = user , token = token)
     self._stage_evthing_in_repo()
-
     self._repo.do_commit(message.encode())
-
-    porcelain.push(str(self._local_path) , tu , branch)
+    porcelain.push(str(self._local_path) , cred_url , branch)
 
   def rmdir(self) :
     shutil.rmtree(self._local_path)
 
-def build_proper_github_repo_url(github_repo_url) :
+def _clean_github_url(github_repo_url) :
   inp = github_repo_url
 
   inp = inp.replace(gitburl , '')
@@ -185,10 +201,24 @@ def build_proper_github_repo_url(github_repo_url) :
 
   return url
 
-def build_targurl_with_usr_token(usr , tok , targ_repo) :
-  return f'https://{usr}:{tok}@github.com/{targ_repo}'
+def _github_url_wt_credentials(user , token , targ_repo) :
+  return f'https://{user}:{token}@github.com/{targ_repo}'
 
 ##
+u = 'https://github.com/imahdimir/d-BaseTicker'
+r = GithubData(u)
+r.clone()
 
+##
+u = 'https://github.com/imahdimir/tset'
+r = GithubData(u , token = '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')
+r.clone()
+
+##
+r.commit_and_push('test' ,
+                  user = r.user_name ,
+                  token = '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')
+
+##
 
 ##
