@@ -1,11 +1,13 @@
-##
+"""
 
+  """
 
 import json
 import shutil
 from pathlib import Path
 from pathlib import PurePath
 
+import pandas as pd
 from dulwich import porcelain
 from dulwich.ignore import IgnoreFilter
 from dulwich.ignore import read_ignore_patterns
@@ -30,7 +32,9 @@ class GithubData :
     self.repo_name = self.user_repo.split('/')[1]
 
     self._cred_url = None
+
     self._local_path = None
+    self.local_path = None
 
     self._repo = None
     self._data_suf = None
@@ -39,8 +43,6 @@ class GithubData :
     self.meta_fp = None
 
     self._make_url_with_credentials()
-    self._init_local_path()
-    self._set_data_fpns()
 
   def _make_url_with_credentials(self) :
     if self._token is None :
@@ -65,15 +67,8 @@ class GithubData :
     else :
       self._local_path = Path(local_dir) / self.repo_name
 
-    if not self._local_path.exists() :
-      self._local_path.mkdir()
-    else :
-      print(f'WARNING: the dir {self.repo_name} already exist.\n'
-            f'If you DO NOT want overwriting'
-            f': set `.local_path` to another directory before `.clone()`')
-
-  def _init_local_path(self) :
-    self.local_path = None
+    if self._local_path.exists() :
+      print('Warning: local_path already exists')
 
   def _get_user_fr_input(self) :
     usr = input('(skip for default) github username:')
@@ -124,7 +119,7 @@ class GithubData :
         self._data_suf = ky
         break
 
-  def _set_data_fpns(self) :
+  def _set_data_fps(self) :
     self._set_defualt_data_suffix()
 
     if self._data_suf is None :
@@ -169,7 +164,7 @@ class GithubData :
     self._repo = porcelain.clone(self._cred_url ,
                                  self._local_path ,
                                  depth = depth)
-    self._set_data_fpns()
+    self._set_data_fps()
     self.read_json()
 
   def commit_and_push(self ,
@@ -182,6 +177,18 @@ class GithubData :
     self._stage_evthing_in_repo()
     self._repo.do_commit(message.encode())
     porcelain.push(str(self._local_path) , cred_url , branch)
+
+  def read_data(self) :
+    if not self._local_path.exists() :
+      self.clone()
+    else :
+      self._set_data_fps()
+
+    if not isinstance(self.data_fp , list) :
+      if self._data_suf == '.xlsx' :
+        return pd.read_excel(self.data_fp)
+      else :
+        return pd.read_parquet(self.data_fp)
 
   def rmdir(self) :
     shutil.rmtree(self._local_path)
@@ -203,22 +210,3 @@ def _clean_github_url(github_repo_url) :
 
 def _github_url_wt_credentials(user , token , targ_repo) :
   return f'https://{user}:{token}@github.com/{targ_repo}'
-
-##
-# u = 'https://github.com/imahdimir/d-BaseTicker'
-# r = GithubData(u)
-# r.clone()
-#
-# ##
-# u = 'https://github.com/imahdimir/tset'
-# r = GithubData(u , token = '')
-# r.clone()
-#
-# ##
-# r.commit_and_push('test' ,
-#                   user = r.user_name ,
-#                   token = '')
-
-##
-
-##
