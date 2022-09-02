@@ -210,3 +210,16 @@ def _clean_github_url(github_repo_url) :
 
 def _github_url_wt_credentials(user , token , targ_repo) :
   return f'https://{user}:{token}@github.com/{targ_repo}'
+
+def get_data_from_github(github_repo_url , local_path = None) :
+  """
+  :param github_repo_url: url of the github repo
+  :param local_path: local path to download the repo to
+  :return:
+  """
+  repo = GithubData(github_repo_url)
+  repo.local_path = local_path
+  repo.clone()
+  df = repo.read_data()
+  repo.rmdir()
+  return df

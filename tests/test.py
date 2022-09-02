@@ -5,13 +5,15 @@
 ##
 
 from src.githubdata import GithubData
+from src.githubdata import get_data_from_github
 
 
 ##
-u = 'https://github.com/imahdimir/d-BaseTicker'
-r = GithubData(u)
-print(r.local_path)
+u = 'https://github.com/imahdimir/d-TSETMC_ID-2-FirmTicker'
+df = get_data_from_github(u)
 
+##
+print(df.head())
 ##
 df = r.read_data()
 
