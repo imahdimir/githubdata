@@ -1,0 +1,9 @@
+dulwich
+pandas
+pyarrow
+fastparquet
+openpyxl
+pip
+build
+twine
+IPython

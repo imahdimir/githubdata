@@ -3,33 +3,49 @@
   """
 
 ##
+import json
 
 from src.githubdata import GithubData
 from src.githubdata import get_data_from_github
+from src.githubdata.main import get_github_token_pathes
 
 
-##
+## the most simple usage
 u = 'https://github.com/imahdimir/d-TSETMC_ID-2-FirmTicker'
 df = get_data_from_github(u)
 
-##
-print(df.head())
-##
-df = r.read_data()
+## test get_github_token_pathes()
+fp = get_github_token_pathes()
+print(fp)
+
+## clone a public repo
+u = 'https://github.com/imahdimir/d-TSETMC_ID-2-FirmTicker'
+repo = GithubData(u)
+repo.clone()
 
 ##
-print(r.source_url)
-print(r._cred_user)
-##
-r.clone()
-##
-r.clone()
+repo.rmdir()
+
+## clone a public repo and commit back
+u = 'https://github.com/imahdimir/test-public'
+repo = GithubData(u)
+repo.clone()
 
 ##
-u = 'https://github.com/imahdimir/tset'
-r = GithubData(u , token = '')
-r.clone()
+js = repo.meta
 ##
+js['desc'] = 'test'
+with open(repo.meta_fp , 'w') as fi :
+    json.dump(js , fi , indent = 4)
 
 ##
-r.commit_and_push('test' , user = r.user_name , token = '')
+msg = 'test commit'
+repo.commit_and_push(msg)
+
+##
+repo.rmdir()
+
+##
+
+
+##
