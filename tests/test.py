@@ -2,14 +2,11 @@
 
   """
 
-##
 import json
 
-import dulwich.porcelain
-
-from src.githubdata import get_data_from_github
-from src.githubdata import GithubData
+from src.githubdata.funcs import get_data_from_github
 from src.githubdata.main import get_github_token_pathes
+from src.githubdata.main import GithubData
 
 
 ## the most simple usage
@@ -48,12 +45,15 @@ repo.commit_and_push(msg)
 repo.rmdir()
 
 ##
-import dulwich
-
-
 ur = 'https://github.com/imahdimir/test-private'
+rp = GithubData(ur)
+rp.overwriting_clone()
 
-dulwich.porcelain.clone(ur , checkout = True)
+##
+
+
+##
+rp.commit_and_push('test commit')
 
 ##
 
