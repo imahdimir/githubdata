@@ -5,8 +5,10 @@
 ##
 import json
 
-from src.githubdata import GithubData
+import dulwich.porcelain
+
 from src.githubdata import get_data_from_github
+from src.githubdata import GithubData
 from src.githubdata.main import get_github_token_pathes
 
 
@@ -21,7 +23,7 @@ print(fp)
 ## clone a public repo
 u = 'https://github.com/imahdimir/d-TSETMC_ID-2-FirmTicker'
 repo = GithubData(u)
-repo.clone()
+repo.overwriting_clone()
 
 ##
 repo.rmdir()
@@ -29,7 +31,7 @@ repo.rmdir()
 ## clone a public repo and commit back
 u = 'https://github.com/imahdimir/test-public'
 repo = GithubData(u)
-repo.clone()
+repo.overwriting_clone()
 
 ##
 js = repo.meta
@@ -46,6 +48,13 @@ repo.commit_and_push(msg)
 repo.rmdir()
 
 ##
+import dulwich
 
+
+ur = 'https://github.com/imahdimir/test-private'
+
+dulwich.porcelain.clone(ur , checkout = True)
+
+##
 
 ##
