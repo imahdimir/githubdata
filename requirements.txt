@@ -1,9 +1,8 @@
-dulwich
-pandas
+giteasy~=1.1
+pandas~=1.4.4
+IPython
 pyarrow
 fastparquet
 openpyxl
-pip
 build
 twine
-IPython

@@ -4,17 +4,18 @@ build-backend = "hatchling.build"
 
 [project]
 name = "githubdata"
-version = "7.0"
+version = "8.0"
 authors = [{ name = "Mahdi Mir", email = "imahdimir@gmail.com" }]
-description = "A simple tool to get last/full version of a github repository and committing back to it"
+description = "A simple tool to get the lastest version of a dataset in a Github repository"
 readme = "README.md"
 license = { file = "LICENSE" }
 dependencies = [
-    "dulwich",
+    "giteasy",
     "pandas",
     "fastparquet",
     "pyarrow",
-    "openpyxl", ]
+    "openpyxl",
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
