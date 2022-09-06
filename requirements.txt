@@ -1,5 +1,5 @@
-giteasy~=1.1
-pandas~=1.4.4
+pandas
+giteasy
 IPython
 pyarrow
 fastparquet
