@@ -11,6 +11,7 @@ from giteasy import Repo
 data_file_suffixes = {
         '.xlsx' : None ,
         '.prq'  : None ,
+        '.csv'  : None ,
         }
 
 class GithubData(Repo) :
@@ -75,8 +76,10 @@ class GithubData(Repo) :
             if self.data_suf == '.xlsx' :
                 # noinspection PyArgumentList
                 return pd.read_excel(self.data_fp)
-            else :
+            elif self.data_suf == '.prq' :
                 return pd.read_parquet(self.data_fp)
+            elif self.data_suf == '.csv' :
+                return pd.read_csv(self.data_fp)
 
 def get_data_from_github(github_url) :
     """
