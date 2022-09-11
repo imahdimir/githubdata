@@ -26,8 +26,8 @@ class GithubData(Repo) :
         self.set_data_fps()
         self.read_metadata()
 
-    def overwriting_clone(self , depth = 1) :
-        super().overwriting_clone()
+    def overwriting_clone(self , overwrite = True , depth = 1) :
+        super().overwriting_clone(overwrite = overwrite , depth = depth)
         self.set_data_fps()
 
     def _set_defualt_data_suffix(self) :
