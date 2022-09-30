@@ -70,8 +70,6 @@ class GithubData(Repo) :
         if not self.local_path.exists() :
             self.overwriting_clone()
 
-        self.set_data_fps()
-
         if not isinstance(self.data_fp , list) :
             if self.data_suf == '.xlsx' :
                 # noinspection PyArgumentList
