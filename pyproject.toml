@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "githubdata"
-version = "8.6"
+version = "9.0"
 authors = [{ name = "Mahdi Mir", email = "imahdimir@gmail.com" }]
 description = "A simple tool to get the lastest version of a dataset in a Github repository"
 readme = "README.md"

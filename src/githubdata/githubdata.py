@@ -5,7 +5,7 @@
 import json
 
 import pandas as pd
-from giteasy import Repo
+from giteasy.repo import Repo
 
 
 data_file_suffixes = {
@@ -72,8 +72,7 @@ class GithubData(Repo) :
 
         if not isinstance(self.data_fp , list) :
             if self.data_suf == '.xlsx' :
-                # noinspection PyArgumentList
-                return pd.read_excel(self.data_fp)
+                return pd.read_excel(self.data_fp, engine='openpyxl')
             elif self.data_suf == '.prq' :
                 return pd.read_parquet(self.data_fp)
             elif self.data_suf == '.csv' :

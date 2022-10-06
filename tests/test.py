@@ -2,8 +2,8 @@
 
   """
 
-from src.githubdata.main import get_data_from_github
-from src.githubdata.main import GithubData
+from src.githubdata.githubdata import get_data_from_github
+from src.githubdata.githubdata import GithubData
 
 
 ## the most simple usage
