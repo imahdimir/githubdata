@@ -2,8 +2,14 @@
 
   """
 
-from src.githubdata.githubdata import get_data_from_github
-from src.githubdata.githubdata import GithubData
+import importlib
+
+from src.githubdata import githubdata
+
+
+importlib.reload(githubdata)
+
+from src.githubdata.githubdata import *
 
 
 ## the most simple usage
@@ -34,9 +40,6 @@ repo.rmdir()
 ur = 'https://github.com/imahdimir/test-private'
 rp = GithubData(ur)
 rp.overwriting_clone()
-
-##
-
 
 ##
 rp.commit_and_push('test commit')
