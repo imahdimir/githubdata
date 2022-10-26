@@ -35,18 +35,20 @@ class GithubData(Repo) :
                 self.data_suf = ky
                 return
 
+        self.data_suf = None
+
     def set_data_fps(self) :
         self._set_defualt_data_suffix()
 
         if not self.data_suf :
             return
 
-        fpns = self.ret_sorted_fpns_by_suf(self.data_suf)
+        fps = self.ret_sorted_fpns_by_suf(self.data_suf)
 
-        if len(fpns) == 1 :
-            self.data_fp = fpns[0]
+        if len(fps) == 1 :
+            self.data_fp = fps[0]
         else :
-            self.data_fp = fpns
+            self.data_fp = fps
 
     def ret_sorted_fpns_by_suf(self , suffix) :
         ls = list(self.local_path.glob(f'*{suffix}'))
