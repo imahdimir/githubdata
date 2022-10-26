@@ -17,9 +17,10 @@ data_file_suffixes = {
 
 class GithubData(Repo) :
 
-    def __init__(self , source_url , user_token_json_path = None) :
-        super().__init__(source_url , user_token_json_path)
-
+    def __init__(self , src_url , github_usr = None , usr_tok_json_fp = None) :
+        super().__init__(src_url = src_url ,
+                         github_usr = github_usr ,
+                         usr_tok_json_fp = usr_tok_json_fp)
         self.set_data_fps()
         self.read_metadata()
 
