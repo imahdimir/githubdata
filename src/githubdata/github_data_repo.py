@@ -2,11 +2,11 @@
 
     """
 
-import json
 from pathlib import Path
 
-import pandas as pd
-from giteasy.repo import Repo
+from giteasy import GitHubRepo
+from mirutil.df import read_data_according_to_type as rdatt
+from mirutil.files import read_json_file as rjf
 
 
 data_file_suffixes = {
@@ -15,17 +15,22 @@ data_file_suffixes = {
         '.csv'  : None ,
         }
 
-class GithubData(Repo) :
+class GithubDataRepo(GitHubRepo) :
 
-    def __init__(self , src_url , github_usr = None , usr_tok_json_fp = None) :
-        super().__init__(src_url = src_url ,
-                         github_usr = github_usr ,
-                         usr_tok_json_fp = usr_tok_json_fp)
+    def __init__(self , repo_url , committing_usr = None , token = None) :
+        super().__init__(repo_url = repo_url ,
+                         committing_usr = committing_usr ,
+                         token = token)
+
         self.set_data_fps()
-        self.read_metadata()
 
-    def overwriting_clone(self , overwrite = True , depth = 1) :
-        super().overwriting_clone(overwrite = overwrite , depth = depth)
+        self.data_suf = None
+        self.data_fp: (Path , list)
+        self.meta_fp: Path
+        self.meta: dict
+
+    def clone_overwrite(self , depth = 1) :
+        super().clone_overwrite(depth = depth)
         self.set_data_fps()
 
     def _set_defualt_data_suffix(self) :
@@ -35,12 +40,10 @@ class GithubData(Repo) :
                 self.data_suf = ky
                 return
 
-        self.data_suf = None
-
     def set_data_fps(self) :
         self._set_defualt_data_suffix()
 
-        if not self.data_suf :
+        if self.data_suf is None :
             return
 
         fps = self.ret_sorted_fpns_by_suf(self.data_suf)
@@ -56,37 +59,25 @@ class GithubData(Repo) :
 
     def read_metadata(self) :
         fps = self.ret_sorted_fpns_by_suf('.json')
-
         if len(fps) == 0 :
             return
-
         fp = fps[0]
         self.meta_fp = fp
-
-        with open(fp , 'r') as fi :
-            js = json.load(fi)
-        self.meta = js
-
-        return js
+        self.meta = rjf(fp)
+        return self.meta
 
     def read_data(self) :
         if not self.local_path.exists() :
-            self.overwriting_clone()
-
+            self.clone_overwrite()
         if isinstance(self.data_fp , Path) :
-            if self.data_suf == '.xlsx' :
-                return pd.read_excel(self.data_fp , engine = 'openpyxl')
-            elif self.data_suf == '.prq' :
-                return pd.read_parquet(self.data_fp)
-            elif self.data_suf == '.csv' :
-                return pd.read_csv(self.data_fp)
+            return rdatt(self.data_fp)
 
 def get_data_from_github(github_url) :
     """
     :param: github_url
     :return: pandas.DataFrame
     """
-    gd = GithubData(github_url)
+    gd = GithubDataRepo(github_url)
     df = gd.read_data()
     gd.rmdir()
     return df
