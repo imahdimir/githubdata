@@ -27,12 +27,12 @@ class GitHubDataRepo(GitHubRepo) :
                          committing_usr = committing_usr ,
                          token = token)
 
-        self.set_data_fps()
-
         self.data_suf = None
         self.data_fp: (Path , list)
         self.meta_fp: Path
         self.meta: dict
+
+        self.set_data_fps()
 
     def clone_overwrite(self , depth = 1) :
         super().clone_overwrite(depth = depth)
