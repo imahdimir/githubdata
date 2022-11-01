@@ -15,10 +15,15 @@ data_file_suffixes = {
         '.csv'  : None ,
         }
 
-class GithubDataRepo(GitHubRepo) :
+class GitHubDataRepo(GitHubRepo) :
 
-    def __init__(self , repo_url , committing_usr = None , token = None) :
+    def __init__(self ,
+                 repo_url ,
+                 local_path = None ,
+                 committing_usr = None ,
+                 token = None) :
         super().__init__(repo_url = repo_url ,
+                         local_path = local_path ,
                          committing_usr = committing_usr ,
                          token = token)
 
@@ -77,7 +82,7 @@ def get_data_from_github(github_url) :
     :param: github_url
     :return: pandas.DataFrame
     """
-    gd = GithubDataRepo(github_url)
+    gd = GitHubDataRepo(github_url)
     df = gd.read_data()
     gd.rmdir()
     return df
