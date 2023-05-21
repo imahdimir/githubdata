@@ -28,7 +28,7 @@ class GitHubDataRepo(GitHubRepo) :
                          token = token)
 
         self.data_suf = None
-        self.data_fp: (Path , list)
+        self.data_fp: Path | list
         self.meta_fp: Path
         self.meta: dict
 
