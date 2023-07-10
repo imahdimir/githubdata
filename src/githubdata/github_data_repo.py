@@ -20,10 +20,12 @@ class GitHubDataRepo(GitHubRepo) :
     def __init__(self ,
                  repo_url ,
                  local_path = None ,
+                 containing_dir = Path('GitHubData/') ,
                  committing_usr = None ,
                  token = None) :
         super().__init__(repo_url = repo_url ,
                          local_path = local_path ,
+                         containing_dir = containing_dir ,
                          committing_usr = committing_usr ,
                          token = token)
 
