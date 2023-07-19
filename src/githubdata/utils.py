@@ -31,6 +31,7 @@ def replace_old_data_with_new_and_iso_jdate_title(gdt , df_fpn) :
     fp = gdt.local_path / f'{tjd}.prq'
 
     shutil.copy(df_fpn , fp)
+    print(f'Replaced {df_fpn} to {fp}')
 
 def push_to_github_by_code_url(gdt , github_url) :
     msg = 'Updated by ' + github_url
