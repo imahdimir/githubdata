@@ -4,11 +4,9 @@
 
 import importlib
 
-
 importlib.reload(githubdata)
 
 from src.githubdata.github_data_repo import *
-
 
 ## the most simple usage
 u = 'https://github.com/imahdimir/d-TSETMC_ID-2-FirmTicker'

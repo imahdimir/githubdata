@@ -8,7 +8,6 @@ from giteasy import GitHubRepo
 from mirutil.df import read_data_according_to_type as rdatt
 from mirutil.files import read_json_file as rjf
 
-
 data_file_suffixes = {
         '.xlsx' : None ,
         '.prq'  : None ,
@@ -24,7 +23,8 @@ class GitHubDataRepo(GitHubRepo) :
                  local_path = None ,
                  containing_dir = default_containing_dir ,
                  committing_usr = None ,
-                 token = None) :
+                 token = None
+                 ) :
         super().__init__(repo_url = repo_url ,
                          local_path = local_path ,
                          containing_dir = containing_dir ,
@@ -80,13 +80,3 @@ class GitHubDataRepo(GitHubRepo) :
             self.clone_overwrite()
         if isinstance(self.data_fp , Path) :
             return rdatt(self.data_fp)
-
-def get_data_from_github(github_url) :
-    """
-    :param: github_url
-    :return: pandas.DataFrame
-    """
-    gd = GitHubDataRepo(github_url)
-    df = gd.read_data()
-    gd.rmdir()
-    return df
