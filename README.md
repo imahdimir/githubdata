@@ -7,10 +7,12 @@ pip install githubdata
 # Quick Start
 
 ```python
-import githubdata as gd
+from githubdata.utils import get_data_fr_github_without_double_clone
 
-github_url = 'https://github.com/imahdimir/d-TSETMC_ID-2-FirmTicker'
-df = gd.get_data_from_github(github_url)
+# Github data repository url
+url = 'https://github.com/imahdimir/d-TSETMC_ID-2-FirmTicker'
+
+df = get_data_fr_github_without_double_clone(url)
 ```
 
-- That is easy as that!
+- Easy as this!
