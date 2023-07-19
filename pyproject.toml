@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "githubdata"
 version = "14.0.0"
 authors = [{ name = "Mahdi Mir", email = "imahdimir@gmail.com" }]
-description = "A simple tool to get the lastest version of a dataset in a Github repository"
+description = "A simple Python package to easily download from and manage a GitHub \"Data repository\""
 readme = "README.md"
 license = { file = "LICENSE" }
 dependencies = [
