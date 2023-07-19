@@ -5,18 +5,26 @@
 
 import shutil
 
+import pandas as pd
 from persiantools.jdatetime import JalaliDateTime
 
 from .github_data_repo import GitHubDataRepo
 
-def get_data_from_github(github_url) :
+def get_data_from_github_without_double_clone(github_url , remove_cache = False
+                                              ) -> pd.DataFrame :
     """
+    gets data from a GitHub data repo, without cloning it twice.
+    if it is already cloned, it will read the data from the local path.
+
     :param: github_url
     :return: pandas.DataFrame
     """
     gd = GitHubDataRepo(github_url)
     df = gd.read_data()
-    gd.rmdir()
+
+    if remove_cache :
+        gd.rmdir()
+
     return df
 
 def clone_with_overwrite_a_repo_return_gdr_obj(gd_url) :
