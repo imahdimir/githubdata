@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "githubdata"
-version = "14.0.0"
+version = "14.0.1"
 authors = [{ name = "Mahdi Mir", email = "imahdimir@gmail.com" }]
 description = "A simple Python package to easily download from and manage a GitHub \"Data repository\""
 readme = "README.md"
@@ -29,6 +29,7 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Utilities"]
