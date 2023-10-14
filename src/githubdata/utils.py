@@ -10,8 +10,8 @@ from persiantools.jdatetime import JalaliDateTime
 
 from .github_data_repo import GitHubDataRepo
 
-def get_data_fr_github_wo_double_clone(github_url , remove_cache = False
-                                       ) -> pd.DataFrame :
+def get_data_fr_github_without_double_clone(github_url , remove_cache = False
+                                            ) -> pd.DataFrame :
     """
     gets data from a GitHub data repo, without cloning it twice.
     if it is already cloned, it will read the data from the local path.
