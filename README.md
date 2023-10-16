@@ -7,12 +7,13 @@ pip install githubdata
 # Quick Start
 
 ```python
-from githubdata.utils import get_data_fr_github_without_double_clone
+from githubdata import get_data_wo_double_clone
 
-# Github data repository url
-url = 'https://github.com/imahdimir/d-TSETMC_ID-2-FirmTicker'
+# GitHub "Data Repository" url/path
+url = 'imahdimir/d-TSETMC_ID-2-FirmTicker'
 
-df = get_data_fr_github_without_double_clone(url)
+# get the data as a pandas DataFrame
+df = get_data_wo_double_clone(url)
 ```
 
-- Easy as That!
+***Easy as that!***
