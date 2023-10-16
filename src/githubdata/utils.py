@@ -31,7 +31,7 @@ def commit_and_push_by_u_repo(gdr: GitHubDataRepo) :
     msg = 'Updated by associated \"u-\" repo/code'
     gdr.commit_and_push(msg)
 
-def upload_2_github(df , fn: str , gdr: GitHubDataRepo) :
+def upload_2_github(gdr: GitHubDataRepo , df , fn: str) :
     if hasattr(gdr , "data_fp") :
         dfp = gdr.data_fp
         dfp.unlink()
