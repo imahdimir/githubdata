@@ -26,3 +26,21 @@ def clone_overwrite_a_repo__ret_gdr_obj(gd_url) :
     gdr = GitHubDataRepo(gd_url)
     gdr.clone_overwrite()
     return gdr
+
+def commit_and_push_by_u_repo(gdr: GitHubDataRepo) :
+    msg = 'Updated by associated \"u-\" repo/code'
+    gdr.commit_and_push(msg)
+
+def upload_2_github(df , fn: str , gdr: GitHubDataRepo) :
+    if hasattr(gdr , "data_fp") :
+        dfp = gdr.data_fp
+        dfp.unlink()
+
+    nfp = gdr.local_path / fn
+
+    df.to_parquet(nfp , index = False)
+
+    commit_and_push_by_u_repo(gdr)
+
+def make_data_fn(dn , iso_date) :
+    return "{}_{}.parquet".format(dn , iso_date)
