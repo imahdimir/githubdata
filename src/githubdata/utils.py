@@ -28,12 +28,12 @@ def clone_overwrite_a_repo__ret_gdr_obj(gd_url) :
     return gdr
 
 def commit_and_push_by_u_repo(gdr: GitHubDataRepo) :
-    msg = 'Updated by associated \"u-\" repo/code'
+    msg = 'Updated by associated \"u\" repo'
     gdr.commit_and_push(msg)
 
 def upload_2_github(gdr: GitHubDataRepo , df , fn: str) :
-    if hasattr(gdr , "data_fp") :
-        dfp = gdr.data_fp
+    dfp = gdr.data_fp
+    if dfp is not None :
         dfp.unlink()
 
     nfp = gdr.local_path / fn
