@@ -15,27 +15,3 @@ dependencies = [
     "pyarrow",
     "pandas",
 ]
-
-classifiers = [
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: Implementation :: PyPy",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Utilities"
-]
-
-keywords = [
-    "TSE",
-    "Finance",
-    "data",
-    "cleaning",
-    "data_cleaning",
-    "Tehran",
-    "Stocks"
-]
-
-[project.urls]
-"Homepage" = "https://github.com/imahdimir/githubdata"
-"Bug Tracker" = "https://github.com/imahdimir/githubdata/issues"
